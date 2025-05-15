@@ -3,14 +3,6 @@ provider "google" {
   region  = var.region
 }
 
-resource "google_artifact_registry_repository" "fastapi_repo" {
-  provider = google
-  location = var.region
-  repository_id = var.repo_name
-  description   = "Artifact Registry for FastAPI App"
-  format        = "DOCKER"
-}
-
 resource "google_container_cluster" "primary" {
   name     = "fastapi-cluster"
   location = var.region
