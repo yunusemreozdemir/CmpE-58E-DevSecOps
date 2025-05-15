@@ -28,6 +28,22 @@ pip install pylint pytest
 uvicorn app.main:app --reload
 ```
 
+Health Check
+```bash
+curl --request GET \
+  --url http://127.0.0.1:8000/health
+```
+
+Echo
+```bash
+curl --request POST \
+  --url http://127.0.0.1:8000/echo \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "test": "data"
+}'
+```
+
 **Linting**
 
 ```bash
@@ -38,4 +54,32 @@ pylint app/ tests/
 
 ```bash
 PYTHONPATH=. pytest
+```
+
+**Building the Docker Image**
+
+```bash
+docker build -t devsecops-fastapi-app:latest .
+```
+
+**Running the Docker Container**
+
+```bash
+docker run -p 80:80 devsecops-fastapi-app:latest
+```
+
+Health Check
+```bash
+curl --request GET \
+  --url http://127.0.0.1:80/health
+```
+
+Echo
+```bash
+curl --request POST \
+  --url http://127.0.0.1:80/echo \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "test": "data"
+}'
 ```

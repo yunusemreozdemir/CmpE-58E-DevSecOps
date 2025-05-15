@@ -28,3 +28,12 @@ jobs:
 
       - name: Run tests
         run: PYTHONPATH=. pytest
+
+      - name: Build Docker image
+        run: |
+          docker build -t devsecops-fastapi-app:latest .
+      
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'devsecops-fastapi-app:latest'
