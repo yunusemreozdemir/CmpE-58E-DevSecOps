@@ -3,6 +3,13 @@ provider "google" {
   region  = var.region
 }
 
+resource "google_artifact_registry_repository" "fastapi_repo" {
+  location      = var.region
+  repository_id = var.repo_name
+  description   = "Artifact Registry for FastAPI App"
+  format        = "DOCKER"
+}
+
 resource "google_container_cluster" "primary" {
   name     = "fastapi-cluster"
   location = var.region
@@ -12,6 +19,7 @@ resource "google_container_cluster" "primary" {
 
   node_config {
     machine_type = "e2-medium"
+    disk_size_gb = 20
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
@@ -27,6 +35,7 @@ resource "google_container_node_pool" "primary_nodes" {
   node_config {
     preemptible  = false
     machine_type = "e2-medium"
+    disk_size_gb = 20
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]

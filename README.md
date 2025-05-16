@@ -83,3 +83,24 @@ curl --request POST \
   "test": "data"
 }'
 ```
+
+### Terraform
+
+**Initialize Terraform**
+
+```bash
+cd terraform
+terraform init
+```
+
+**Plan Terraform**
+
+```bash
+terraform plan -var-file=terraform.tfvars
+```
+
+**Apply Terraform**
+
+```bash
+terraform apply -var-file=terraform.tfvars
+```

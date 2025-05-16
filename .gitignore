@@ -3,3 +3,9 @@ __pycache__/
 .env
 *.log
 *.sqlite3
+.terraform
+.terraform.lock.hcl
+terraform.tfvars
+terraform.tfstate
+terraform.tfstate.*
+.terraform.tfstate.lock.info

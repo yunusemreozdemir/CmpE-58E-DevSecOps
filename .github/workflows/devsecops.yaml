@@ -84,10 +84,6 @@ jobs:
       - name: Terraform Plan
         working-directory: terraform
         run: terraform plan -var-file=terraform.tfvars
-
-      - name: Terraform Apply
-        working-directory: terraform
-        run: terraform apply -auto-approve -var-file=terraform.tfvars
       
       - name: Get GKE credentials
         run: |
