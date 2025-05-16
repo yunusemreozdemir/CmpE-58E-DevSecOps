@@ -84,7 +84,13 @@ jobs:
       - name: Terraform Plan
         working-directory: terraform
         run: terraform plan -var-file=terraform.tfvars
-      
+
+      - name: Configure kubectl to use legacy GKE auth
+        run: |
+          gcloud config set container/use_client_certificate True
+          gcloud config unset container/use_application_default_credentials
+          gcloud config set container/use_gke_gcloud_auth_plugin False
+        
       - name: Get GKE credentials
         run: |
           gcloud container clusters get-credentials fastapi-cluster \
