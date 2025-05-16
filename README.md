@@ -1,6 +1,6 @@
 # CmpE-58E-DevSecOps
 
-### Working Locally
+## Working Locally
 
 **Create a Virtual Environment**
 
@@ -84,7 +84,7 @@ curl --request POST \
 }'
 ```
 
-### Terraform
+## Terraform
 
 **Initialize Terraform**
 
