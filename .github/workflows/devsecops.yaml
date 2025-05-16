@@ -91,7 +91,7 @@ jobs:
           gcloud config unset container/use_application_default_credentials
         env:
           USE_GKE_GCLOUD_AUTH_PLUGIN: "False"
-          
+
       - name: Get GKE credentials
         run: |
           gcloud container clusters get-credentials fastapi-cluster \
