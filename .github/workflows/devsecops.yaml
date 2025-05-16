@@ -85,20 +85,15 @@ jobs:
         working-directory: terraform
         run: terraform plan -var-file=terraform.tfvars
 
-      - name: Configure kubectl to use legacy GKE auth
+      - name: Install GKE auth plugin
         run: |
-          gcloud config set container/use_client_certificate True
-          gcloud config unset container/use_application_default_credentials
-        env:
-          USE_GKE_GCLOUD_AUTH_PLUGIN: "False"
+          gcloud components install gke-gcloud-auth-plugin
 
       - name: Get GKE credentials
         run: |
           gcloud container clusters get-credentials fastapi-cluster \
             --region ${{ secrets.GCP_REGION }} \
             --project ${{ secrets.GCP_PROJECT_ID }}
-        env:
-          USE_GKE_GCLOUD_AUTH_PLUGIN: "False"
 
       - name: Replace image reference in deployment.yaml
         run: |
@@ -108,6 +103,3 @@ jobs:
         run: |
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
-        env:
-          USE_GKE_GCLOUD_AUTH_PLUGIN: "False"
-
