@@ -33,6 +33,21 @@ jobs:
       - name: Run tests
         run: PYTHONPATH=. pytest
 
+      - name: Scan Terraform with Checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: terraform/
+          framework: terraform
+          output_format: cli,sarif
+          output_file_path: console,terraform-results.sarif
+          soft_fail: true
+
+      - name: Upload Checkov scan results
+        uses: github/codeql-action/upload-sarif@v3
+        if: success() || failure()
+        with:
+          sarif_file: terraform-results.sarif
+
       - name: Build Docker image
         run: |
           docker build -t devsecops-fastapi-app:latest .
@@ -65,25 +80,6 @@ jobs:
           IMAGE="${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REPO_NAME }}/devsecops-fastapi-app:${{ github.sha }}"
           docker tag devsecops-fastapi-app:latest $IMAGE
           docker push $IMAGE
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.7
-
-      - name: Create terraform.tfvars from secrets
-        run: |
-          echo 'project_id = "${{ secrets.GCP_PROJECT_ID }}"' > terraform/terraform.tfvars
-          echo 'region     = "${{ secrets.GCP_REGION }}"' >> terraform/terraform.tfvars
-          echo 'repo_name  = "${{ secrets.GCP_ARTIFACT_REPO_NAME }}"' >> terraform/terraform.tfvars
-
-      - name: Terraform Init
-        working-directory: terraform
-        run: terraform init
-
-      - name: Terraform Plan
-        working-directory: terraform
-        run: terraform plan -var-file=terraform.tfvars
 
       - name: Install GKE auth plugin
         run: |
