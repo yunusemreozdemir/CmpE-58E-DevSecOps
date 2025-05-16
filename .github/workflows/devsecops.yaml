@@ -102,9 +102,18 @@ jobs:
           # Wait for Gatekeeper to be ready
           kubectl wait --for=condition=available --timeout=300s deployment/gatekeeper-controller-manager -n gatekeeper-system
 
-      - name: Apply Gatekeeper policies
+      - name: Apply Gatekeeper template first
         run: |
-          kubectl apply -k k8s/gatekeeper/
+          kubectl apply -f k8s/gatekeeper/template.yaml
+          echo "Waiting for CRD to be registered..."
+          sleep 10
+          kubectl get crds | grep k8sallowedrepos || sleep 10
+          kubectl get crds | grep k8sallowedrepos || sleep 10
+          kubectl get crds | grep k8sallowedrepos
+
+      - name: Apply Gatekeeper constraint
+        run: |
+          kubectl apply -f k8s/gatekeeper/constraint.yaml
 
       - name: Replace image reference in deployment.yaml
         run: |
