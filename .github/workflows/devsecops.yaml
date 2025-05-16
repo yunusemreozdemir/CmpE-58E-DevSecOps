@@ -91,6 +91,21 @@ jobs:
             --region ${{ secrets.GCP_REGION }} \
             --project ${{ secrets.GCP_PROJECT_ID }}
 
+      - name: Update Gatekeeper constraint with registry info
+        run: |
+          REGISTRY="${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REPO_NAME }}"
+          sed -i "s|<REGISTRY_PLACEHOLDER>|$REGISTRY|g" k8s/gatekeeper/constraint.yaml
+
+      - name: Install OPA Gatekeeper
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/master/deploy/gatekeeper.yaml
+          # Wait for Gatekeeper to be ready
+          kubectl wait --for=condition=available --timeout=300s deployment/gatekeeper-controller-manager -n gatekeeper-system
+
+      - name: Apply Gatekeeper policies
+        run: |
+          kubectl apply -k k8s/gatekeeper/
+
       - name: Replace image reference in deployment.yaml
         run: |
           sed -i "s|<IMAGE_PLACEHOLDER>|${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACT_REPO_NAME }}/devsecops-fastapi-app:${{ github.sha }}|" k8s/deployment.yaml
