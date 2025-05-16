@@ -89,13 +89,16 @@ jobs:
         run: |
           gcloud config set container/use_client_certificate True
           gcloud config unset container/use_application_default_credentials
-          gcloud config set container/use_gke_gcloud_auth_plugin False
-        
+        env:
+          USE_GKE_GCLOUD_AUTH_PLUGIN: "False"
+          
       - name: Get GKE credentials
         run: |
           gcloud container clusters get-credentials fastapi-cluster \
             --region ${{ secrets.GCP_REGION }} \
             --project ${{ secrets.GCP_PROJECT_ID }}
+        env:
+          USE_GKE_GCLOUD_AUTH_PLUGIN: "False"
 
       - name: Replace image reference in deployment.yaml
         run: |
@@ -105,4 +108,6 @@ jobs:
         run: |
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
+        env:
+          USE_GKE_GCLOUD_AUTH_PLUGIN: "False"
 
