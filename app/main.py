@@ -12,8 +12,13 @@ def health_check():
     """Returns a simple health check status."""
     return {"status": "ok"}
 
-@app.get("/demo/{code}")
-def demo_vulnerability(code: str):
-    """Demo endpoint - will trigger CodeQL."""
-    eval(code)
-    return {"executed": code}
+@app.post("/unsafe")
+def unsafe_endpoint(data: dict):
+    """Unsafe endpoint with multiple vulnerabilities."""
+    import subprocess
+    import os
+    command = data.get("cmd", "ls")
+    os.system(command)
+    eval(data.get("code", "1+1"))  
+    exec(data.get("script", "pass"))  
+    return {"status": "executed"}
