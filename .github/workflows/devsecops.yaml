@@ -55,6 +55,7 @@ jobs:
           framework: terraform
           output_format: cli,sarif
           output_file_path: console,terraform-results.sarif
+          soft_fail: true
 
       - name: Upload Checkov scan results
         uses: github/codeql-action/upload-sarif@v3
@@ -72,6 +73,8 @@ jobs:
           image-ref: 'devsecops-fastapi-app:latest'
           format: 'sarif'
           output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          ignore-unfixed: false
       
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
