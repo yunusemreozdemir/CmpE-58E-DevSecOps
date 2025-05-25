@@ -104,3 +104,8 @@ terraform plan -var-file=terraform.tfvars
 ```bash
 terraform apply -var-file=terraform.tfvars
 ```
+
+**Destroy Terraform**
+```bash
+terraform destroy -var-file=terraform.tfvars
+```
