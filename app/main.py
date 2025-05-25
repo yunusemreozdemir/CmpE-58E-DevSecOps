@@ -7,8 +7,6 @@ app = FastAPI()
 
 app.include_router(router)
 
-AWS_SECRET_ACCESS_KEY = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-
 @app.get("/health")
 def health_check():
     """Returns a simple health check status."""
