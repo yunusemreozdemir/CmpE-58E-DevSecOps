@@ -16,3 +16,9 @@ def test_echo():
     response = client.post("/echo", json={"msg": "hello"})
     assert response.status_code == 200
     assert response.json() == {"you_sent": {"msg": "hello"}}
+
+def test_fail():
+    """Intentionally fail the test."""
+    a = 1
+    b = 2
+    assert a == b
